@@ -1,0 +1,238 @@
+﻿<html>
+   <meta charset="utf-8"/>
+  <title>Base de Datos</title>
+<link href="css/jquery.mobile.theme-1.0.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/jquery.mobile.structure-1.0.min.css" rel="stylesheet" type="text/css"/>
+
+<script src="phonegap.js"></script>
+<script src="js/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+<script type="text/javascript"></script>
+  
+   <head>
+     <script type="text/javascript">
+	 $(function(){
+	 document.addEventListener("deviceready", function(){
+		//alert("funciona");
+		 var boton=$("#guardar");
+		 boton.tap(function(){
+		  var marc=$("#marca").val();
+		  var mod=$("#modelo").val();
+		  var col=$("#color").val();
+		  var prec=$("#precio").val();
+		  if(marc!=""&&mod!=""&&col!=""&&prec!=""){
+			  enviar(marc,mod,col,prec);
+		  }else {
+			  alert("Todos los campos son requeridos");
+		  }
+	 });
+         	 
+	 function enviar(marc,mod,col,prec ){
+	$.ajax({
+		type: "POST",
+		url: "http://onir.260mb.net/procesar.php",
+		data: "Marca="+marc+"&Modelo="+mod+"&Color="+col+"&Precio="+prec,
+		success: onSuccess
+	}).done(function(msg){
+		if(msg==1){
+				
+		}else{
+			//navigator.notification.alert("Hubo un error en el registro",null,"Error","Aceptar");
+		}
+	});
+	function onSuccess(data)
+            {     
+			   
+	    alert(data);
+            }
+			
+}
+	 var bot=$("#modificarb");
+		 bot.tap(function(){
+		  var marcM=$("#marcaM").val();
+		  var modM=$("#modeloM").val();
+		  var colM=$("#colorM").val();
+		  var precM=$("#precioM").val();
+		  if(marcM!=""&&modM!=""&&colM!=""&&precM!=""){
+			  modificar(marcM,modM,colM,precM);
+		  }else {
+			  alert("Todos los campos son requeridos");
+		  }
+	 });
+         	 
+	 function modificar(marcM,modM,colM,precM ){
+	$.ajax({
+		type: "POST",
+		url: "http://onir.260mb.net/modificar.php",
+		data: "Marca="+marcM+"&Modelo="+modM+"&Color="+colM+"&Precio="+precM,
+		success: onSuccess
+	}).done(function(msg){
+		if(msg==1){
+				
+		}else{
+			//navigator.notification.alert("Hubo un error en el registro",null,"Error","Aceptar");
+		}
+	});
+	function onSuccess(data)
+            {     
+			   
+	    alert(data);
+            }
+			
+}
+		 var bo=$("#eliminarb");
+		 bo.tap(function(){
+		  var marca=$("#marcaE").val();
+		  
+		  if(marca!=""){
+			  eliminar(marca);
+		  }else {
+			  alert("El campos es requerido");
+		  }
+	 });
+         	 
+	 function eliminar(marca ){
+	$.ajax({
+		type: "POST",
+		url: "http://onir.260mb.net/eliminar.php",
+		data: "Marca="+marca,
+		success: onSuccess
+	}).done(function(msg){
+		if(msg==1){
+				
+		}else{
+			//navigator.notification.alert("Hubo un error en el registro",null,"Error","Aceptar");
+		}
+	});
+	function onSuccess(data)
+            {     
+			   
+	    alert(data);
+            }
+			
+}
+	 var btnconsulta=$("#consultar");
+	 btnconsulta.tap(function(){
+		 $.ajax({
+			 type:"POST",
+			 url:"http://onir.260mb.net/consulta.php",
+			 data:"",
+			 success: consultando
+		 });
+	 });
+			 
+	 },false);
+	 });
+         function consultando(data){
+	var registro=$.parseJSON(data);
+	 var mostrar=$("#datos");
+         mostrar.append('<table border="1"><tr><td>id</td><td>Marca</td><td>Modelo</td><td>Color</td><td>Precio</td></tr>');
+
+         
+         
+	 for(var i in registro){
+           
+ mostrar.append(
+         
+         '<tr><td>'+registro[i].id_autos+'</td>'+
+         "<td>"+registro[i].Marca+"</td>"+
+         "<td>"+registro[i].Modelo+"</td> "+
+         "<td>"+registro[i].Color+" </td>"+
+         "<td>"+registro[i].Precio+"</td></tr>"); 
+         
+         
+	
+}
+mostrar.append("</table>");
+}
+
+	 </script>
+   </head>
+   <body>
+       <div data-role="page" id="principal">
+           <div data-role="header">
+               <p>Principal</p>
+           </div> 
+           <div data-role="content" >
+               <a href="#captura" data-role="button">Captura</a>
+                 <a href="#consultas" data-role="button">consultas</a>
+                  <a href="#modificar" data-role="button">Modificar</a>
+                   <a href="#eliminar" data-role="button">Eliminar</a>
+           </div>
+            <div data-role="footer" >
+               
+           </div> 
+       </div>
+       <div data-role="page" id="captura">
+             <div data-role="header">
+               <p>Captura</p>
+           </div> 
+           <div data-role="content" >
+             <ul data-role="listview">
+            <li><input type="text" id="marca" placeholder="Marca" /></li>
+            <li><input type="text" id="modelo"  placeholder="Modelo" /></li>
+            <li><input type="text" id="color"  placeholder="Color" /></li>       
+            <li><input type="text" id="precio"  placeholder="Precio" /></li>  
+           
+        </ul>
+           </div>
+            <div data-role="footer" >
+               <a href="#principal" data-role="button">Menú Principal</a>
+                <a href="#" data-role="button" id="guardar">Guardar</a>
+           </div> 
+       </div>
+       <div data-role="page" id="consultas">
+             <div data-role="header">
+               <p>Consultas</p>
+           </div> 
+           <div data-role="content" >
+           <a href="#" id="consultar" data-role="button">Consultar</a>
+               <p>Datos</p>
+               
+               <div id="datos">
+           </div>
+            <div data-role="footer" >
+                 <a href="#principal" data-role="button">Menú Principal</a>
+           </div> 
+       </div>
+       </div>
+       
+       <div data-role="page" id="modificar">
+             <div data-role="header">
+               <p>Modificar</p>
+           </div> 
+           <div data-role="content" >
+           <ul data-role="listview">
+            <li><input type="text" id="marcaM" placeholder="Marca" /></li>
+            <li><input type="text" id="modeloM"  placeholder="Modelo" /></li>
+            <li><input type="text" id="colorM"  placeholder="Color" /></li>       
+            <li><input type="text" id="precioM"  placeholder="Precio" /></li>  
+           
+        </ul>
+           </div>
+           
+            <div data-role="footer" >
+                 <a href="#principal" data-role="button">Menú Principal</a>
+                 <a href="#" data-role="button" id="modificarb">Guardar</a>
+           </div> 
+       </div>
+       
+        <div data-role="page" id="eliminar">
+             <div data-role="header">
+               <p>Eliminar</p>
+           </div> 
+           <div data-role="content" >
+             <ul data-role="listview">
+            <li><input type="text" id="marcaE" placeholder="Marca" /></li>
+        </ul>
+           </div>
+           
+            <div data-role="footer" >
+                 <a href="#principal" data-role="button">Menú Principal</a>
+                 <a href="#" data-role="button" id="eliminarb">Elinimar</a>
+           </div> 
+       </div>
+   </body>
+   
+    
+</html>
